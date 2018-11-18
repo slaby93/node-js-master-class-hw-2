@@ -2,7 +2,8 @@ import * as http from 'http'
 import * as url from 'url'
 import router from './router'
 import Method from './consts/methods'
-
+import * as querystring from 'querystring'
+import { StringDecoder } from 'string_decoder'
 /**
  * Server class
  * Create and maintain server instance
@@ -18,21 +19,34 @@ class Server {
    * Function that handles incomming requests
    */
   requestHandler = async (req: http.IncomingMessage, res: http.ServerResponse) => {
+
     try {
+      const parsedBody: string = await this.parseBodyToJSON(req)
       // take path data from request
       const { pathname, query } = url.parse(req.url)
       const method: Method = req.method as Method
+      const parsedQuery = querystring.parse(query)
       // handle request
       const { responseStatus, response } = await router(pathname, query, method, req, res)
       // assign responseStatus
       res.statusCode = responseStatus
       // send response along with parsed data
-      res.end(this.parseResponse(response))
+      res.end(this.stringify(response))
     } catch {
       res.statusCode = 500
       res.end()
     }
   }
+
+  parseBodyToJSON = async (req: http.IncomingMessage) => new Promise<string>((resolve) => {
+    let body: string = ''
+    const decoder = new StringDecoder('utf8')
+    req.on('data', (chunk: Buffer) => body += decoder.write(chunk))
+    req.on('end', () => {
+      body += decoder.end()
+      resolve(this.parse(body))
+    })
+  })
 
   convertMethod = (method: string): Method => {
     switch (method.toLowerCase()) {
@@ -43,12 +57,25 @@ class Server {
       default: return Method.GET
     }
   }
-
-  parseResponse = (response: any) => {
+  /**
+   * Parse value from JSON
+   */
+  parse = (input: any) => {
     try {
-      return JSON.stringify(response)
+      return JSON.parse(input)
     } catch {
-      return response
+      return input
+    }
+  }
+
+  /**
+   * Parse value to JSON
+   */
+  stringify = (value: any) => {
+    try {
+      return JSON.stringify(value)
+    } catch {
+      return value
     }
   }
 

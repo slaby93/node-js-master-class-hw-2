@@ -6,9 +6,17 @@
  *  address: string
  */
 class User {
-  constructor(name: string, email: string, address: string) {
+  name: string
+  email: string
+  address: string
 
+  save = () => {
+
+  }
+
+  load = () => {
+    
   }
 }
 
-module.exports = User
+export default User
