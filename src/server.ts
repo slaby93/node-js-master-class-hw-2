@@ -21,13 +21,14 @@ class Server {
   requestHandler = async (req: http.IncomingMessage, res: http.ServerResponse) => {
 
     try {
-      const parsedBody: string = await this.parseBodyToJSON(req)
+      // get data from body
+      const parsedBody: any = await this.parseBodyToJSON(req)
       // take path data from request
       const { pathname, query } = url.parse(req.url)
       const method: Method = req.method as Method
       const parsedQuery = querystring.parse(query)
       // handle request
-      const { responseStatus, response } = await router(pathname, query, method, req, res)
+      const { responseStatus, response } = await router(pathname, query, parsedBody, parsedQuery, method, req, res)
       // assign responseStatus
       res.statusCode = responseStatus
       // send response along with parsed data
