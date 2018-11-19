@@ -8,3 +8,7 @@ export interface RouteOutput {
     responseStatus: number,
     response?: any,
 }
+
+export interface Endpoint {
+    [index: string]: RouteHandler
+}

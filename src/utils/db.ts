@@ -12,6 +12,7 @@ export default {
     } catch (error) {
       // @TODO: move to logger
       console.log({ error })
+      throw error
     }
   },
   load: async (folder: string, file: string): Promise<any> => {
@@ -36,6 +37,7 @@ export default {
     } catch (error) {
       // @TODO: move to logger
       console.log({ error })
+      throw error
     }
   },
   delete: async (folder: string, file: string) => {

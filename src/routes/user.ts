@@ -1,10 +1,10 @@
 import * as http from 'http'
-import { RouteHandler, RouteOutput } from './../interfaces'
+import { RouteHandler, RouteOutput, Endpoint } from './../interfaces'
 import Method from './../consts/methods'
 import User from './../models/user'
 import randomStringGenerator from './../utils/randomStringGenerator'
 
-const handler: { [index: string]: RouteHandler } = {
+const handler: Endpoint = {
     [Method.GET]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
         res.setHeader('Content-Type', 'application/json')
         try {
@@ -16,7 +16,6 @@ const handler: { [index: string]: RouteHandler } = {
             const user = new User()
             user.id = id
             await user.load()
-            console.log({ user })
             return { responseStatus: 200, response: user }
 
         } catch {

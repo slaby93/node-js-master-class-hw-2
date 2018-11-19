@@ -1,11 +1,8 @@
 import * as http from 'http'
-import UserHandler from './routes/user'
-import { RouteHandler, RouteOutput } from './interfaces'
+import { RouteOutput } from './interfaces'
 import Method from './consts/methods'
+import routes from './routes'
 
-const routes: { [index: string]: { [method: string]: RouteHandler } } = {
-    '/user': UserHandler
-}
 
 const router = async (path: string, query: string, parsedBody: any, parsedQuery: any, method: Method, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     const handler = routes[path][method]
