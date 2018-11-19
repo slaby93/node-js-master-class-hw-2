@@ -1,6 +1,7 @@
 import { IncomingMessage } from "http";
 import db from "./db";
 import { TOKEN_FOLDER } from "../routes/token";
+import logger from "./logger";
 
 export const checkToken = async (req: IncomingMessage, id: string): Promise<boolean> => {
   try {
@@ -13,8 +14,7 @@ export const checkToken = async (req: IncomingMessage, id: string): Promise<bool
     return isReceivedTokenStillValid && isReceivedTokenValid ? true : false
 
   } catch (error) {
-    //@TODO: move to logger
-    console.log({ error })
+    logger.error('Invalid token', { error })
     return false
   }
 }

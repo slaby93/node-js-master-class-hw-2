@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import logger from './logger';
 const DATA_FOLDER = '.data'
 
 export default {
@@ -10,8 +11,7 @@ export default {
         })
       })
     } catch (error) {
-      // @TODO: move to logger
-      console.log({ error })
+      logger.error({ error })
       throw error
     }
   },
@@ -23,8 +23,7 @@ export default {
         })
       })
     } catch (error) {
-      //@TODO move to logger
-      console.error({ error })
+      logger.error({ error })
     }
   },
   update: async (folder: string, file: string, data: any) => {
@@ -35,8 +34,7 @@ export default {
         })
       })
     } catch (error) {
-      // @TODO: move to logger
-      console.log({ error })
+      logger.error({ error })
       throw error
     }
   },
@@ -48,8 +46,7 @@ export default {
         })
       })
     } catch (error) {
-      //@TODO: move to logger
-      console.error({ error })
+      logger.error({ error })
       throw error
     }
   },

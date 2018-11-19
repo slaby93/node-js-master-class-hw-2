@@ -88,7 +88,7 @@ class Server {
     if (!this.serverInstance) {
       throw new Error('Missing server instance!')
     }
-
+    console.log(`Server started at port ${port}`)
     this.serverInstance.listen(port, () => {
     })
   }

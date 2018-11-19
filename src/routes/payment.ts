@@ -25,13 +25,16 @@ const handler: Endpoint = {
       const user = new User()
       user.id = id
       await user.load()
-      await mailgun.sendEmail(user)
       const success = await payment.pay(orderId, token)
+      if (!success) {
+        return { responseStatus: 500, response: { err: 'Can\'t make payment' } }
+      }
       const order = new Order()
       order.userId = id
       await order.load()
       order.receivedPayment = success
       await order.update()
+      await mailgun.sendEmail(user)
       return { responseStatus: 200, response: { success } }
 
     } catch (error) {
