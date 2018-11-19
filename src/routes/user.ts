@@ -43,18 +43,51 @@ const handler: { [index: string]: RouteHandler } = {
             return { responseStatus: 500, response: { err: 'Error while creating user' } }
         }
     },
-    [Method.PUT]: (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => new Promise((resolve) => {
-        setTimeout(() => {
-            res.setHeader('Content-Type', 'application/json')
-            resolve({ responseStatus: 400, response: 'test' })
-        }, 1000)
-    }),
-    [Method.DELETE]: (path: string, query: string, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => new Promise((resolve) => {
-        setTimeout(() => {
-            res.setHeader('Content-Type', 'application/json')
-            resolve({ responseStatus: 400, response: 'test' })
-        }, 1000)
-    }),
+    [Method.PUT]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
+        try {
+            const {
+                id,
+                name,
+                email,
+                address
+            } = bodyData
+            if (!id) {
+                return { responseStatus: 400, response: { err: 'Invalid id field' } }
+            }
+            const user = new User()
+            user.id = id
+            await user.load()
+            if (name) {
+                user.name = name
+            }
+            if (address) {
+                user.address = address
+            }
+            if (email) {
+                user.email = email
+            }
+            await user.save()
+            return { responseStatus: 200 }
+        } catch (error) {
+            return { responseStatus: 500, response: { err: 'Error while updating user data' } }
+        }
+    },
+    [Method.DELETE]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
+        try {
+            const { id } = bodyData
+            if (!id) {
+                return { responseStatus: 400, response: { err: 'Invalid id field' } }
+            }
+            const user = new User()
+            user.id = id
+            await user.delete()
+            return { responseStatus: 200 }
+
+        } catch (error) {
+            return { responseStatus: 500, response: { error } }
+        }
+
+    },
 }
 
 export default handler

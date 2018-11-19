@@ -5,7 +5,7 @@ export default {
   save: async (folder: string, file: string, data: any) => {
     try {
       await new Promise((resolve, reject) => {
-        fs.writeFile(`${DATA_FOLDER}/${folder}/${file}`, data, error => {
+        fs.writeFile(`${DATA_FOLDER}/${folder}/${file}`, data, { encoding: 'utf-8', flag: 'wx' }, error => {
           error ? reject(error) : resolve()
         })
       })
@@ -27,9 +27,27 @@ export default {
     }
   },
   update: async (folder: string, file: string, data: any) => {
-
+    try {
+      await new Promise((resolve, reject) => {
+        fs.writeFile(`${DATA_FOLDER}/${folder}/${file}`, data, { encoding: 'utf-8', flag: 'w+' }, error => {
+          error ? reject(error) : resolve()
+        })
+      })
+    } catch (error) {
+      // @TODO: move to logger
+      console.log({ error })
+    }
   },
   delete: async (folder: string, file: string) => {
-
+    try {
+      await new Promise((resolve, reject) => {
+        fs.unlink(`${DATA_FOLDER}/${folder}/${file}`, error => {
+          error ? reject('Can\'t find requested file') : resolve()
+        })
+      })
+    } catch (error) {
+      //@TODO: move to logger
+      console.error({ error })
+    }
   },
 }

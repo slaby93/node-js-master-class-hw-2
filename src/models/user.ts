@@ -20,12 +20,21 @@ class User {
     await db.save(User.FOLDER, this.id, serializedUser)
   }
 
+  update = async () => {
+    const serializedUser = User.serialize(this)
+    await db.update(User.FOLDER, this.id, serializedUser)  
+  }
+
   load = async () => {
     const data: string = await db.load(User.FOLDER, this.id)
     const deserializedUser: User = User.deserialize(data)
     this.id = deserializedUser.id
     this.email = deserializedUser.email
     this.address = deserializedUser.address
+  }
+
+  delete = async () => {
+    await db.delete(User.FOLDER, this.id)
   }
 
   private static serialize = (user: User): string => {
