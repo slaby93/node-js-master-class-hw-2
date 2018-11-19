@@ -3,6 +3,8 @@ import { RouteOutput, Endpoint } from '../interfaces';
 import Methods from '../consts/methods';
 import randomStringGenerator from '../utils/randomStringGenerator';
 import db from '../utils/db';
+import User from '../models/User';
+import hash from '../utils/hash';
 
 export const TOKEN_FOLDER = 'tokens'
 const ONE_HOUR = 1000 * 60 * 60
@@ -28,14 +30,24 @@ const handler: Endpoint = {
   },
   /**
    * Create token for user
-   * Accepts: id - user id
+   * Equivalent to logging
+   * Accepts: 
+   *    id - user id
+   *    password - password matching stored one
    * Returns: token - token which shold be put into header
    */
   [Methods.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
-      const { id } = bodyData
+      const { id, password } = bodyData
       if (!id) {
         return { responseStatus: 400, response: { err: 'Invalid id field' } }
+      }
+      const user = new User()
+      user.id = id
+      await user.load()
+      const hashedReceivedPassword = hash(password)
+      if (hashedReceivedPassword !== user.password) {
+        return { responseStatus: 401, response: { err: 'Invalid password!' } }
       }
 
       const token = {
@@ -45,7 +57,18 @@ const handler: Endpoint = {
       await db.save(TOKEN_FOLDER, id, JSON.stringify(token))
       return { responseStatus: 200, response: { token } }
     } catch (error) {
-      return { responseStatus: 500, response: { err: 'Can\'t create new token.' } }
+      /**
+       * Example how we can be more specific about reason of failure
+       */
+      let reason = ''
+      switch (error.code) {
+        case 'EEXIST':
+          reason = 'Token already exists.'
+          break;
+        default:
+          reason = 'Can\'t create new token.'
+      }
+      return { responseStatus: 500, response: { err: reason } }
     }
   },
   /**

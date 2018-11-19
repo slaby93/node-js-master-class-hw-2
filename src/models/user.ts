@@ -13,6 +13,7 @@ class User {
   email: string
   address: string
   id: string
+  password: string
 
   save = async () => {
     const serializedUser = User.serialize(this)
@@ -31,6 +32,7 @@ class User {
     this.email = deserializedUser.email
     this.address = deserializedUser.address
     this.name = deserializedUser.name
+    this.password = deserializedUser.password
   }
 
   delete = async () => {
@@ -38,12 +40,13 @@ class User {
   }
 
   private static serialize = (user: User): string => {
-    const { name, email, address, id } = user
+    const { name, email, address, id, password } = user
     return JSON.stringify({
       name,
       email,
       address,
-      id
+      id,
+      password
     })
   }
 
@@ -54,6 +57,7 @@ class User {
     user.email = parsedData.email
     user.address = parsedData.address
     user.name = parsedData.name
+    user.password = parsedData.password
     return user
   }
 

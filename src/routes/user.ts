@@ -4,6 +4,7 @@ import Method from './../consts/methods'
 import User from './../models/User'
 import randomStringGenerator from './../utils/randomStringGenerator'
 import { checkToken } from '../utils/routes';
+import hash from '../utils/hash';
 
 const handler: Endpoint = {
     /** 
@@ -37,6 +38,7 @@ const handler: Endpoint = {
      *      name - user name
      *      email - valid user email
      *      address - user address
+     *      password - user password
      */
     [Method.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
         res.setHeader('Content-Type', 'application/json')
@@ -44,12 +46,15 @@ const handler: Endpoint = {
             const {
                 name,
                 email,
-                address
+                address,
+                password
             } = bodyData
             const newUser = new User()
+            const hashedPassword = hash(password)
             newUser.name = name
             newUser.email = email
             newUser.address = address
+            newUser.password = hashedPassword
             newUser.id = randomStringGenerator(20)
             await newUser.save()
 

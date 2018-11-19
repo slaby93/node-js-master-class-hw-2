@@ -3,6 +3,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development'
 
 interface IConfig {
   PORT: number,
+  PASSWORD_SALT: string,
   MAILGUN: {
     URL: string,
     DOMAIN: string,
@@ -17,6 +18,7 @@ interface IConfig {
 const config: { [index: string]: IConfig, } = {
   production: {
     PORT: 5000,
+    PASSWORD_SALT: '',
     MAILGUN: {
       URL: 'api.mailgun.net',
       DOMAIN: '',
@@ -29,6 +31,7 @@ const config: { [index: string]: IConfig, } = {
   },
   development: {
     PORT: 3000,
+    PASSWORD_SALT: '',
     MAILGUN: {
       URL: 'api.mailgun.net',
       DOMAIN: '',
