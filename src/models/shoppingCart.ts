@@ -1,9 +1,10 @@
 import db from "../utils/db";
 
-interface IShoppingCartItem {
-  name: string,
-  price: number,
-  id: string
+export interface IShoppingCartItem {
+  name?: string,
+  price?: number,
+  id: string,
+  quantity: number,
 }
 
 /**

@@ -3,7 +3,7 @@ import { Endpoint, RouteOutput } from "../interfaces";
 import Methods from "../consts/methods";
 import { checkToken } from "../utils/routes";
 import randomStringGenerator from "../utils/randomStringGenerator";
-import ShoppingCart from "../models/shoppingCart";
+import ShoppingCart, { IShoppingCartItem } from "../models/shoppingCart";
 
 
 const handler: Endpoint = {
@@ -50,7 +50,38 @@ const handler: Endpoint = {
     }
   },
   [Methods.PUT]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
-    return { responseStatus: 500 }
+    try {
+      const { id, items } = bodyData
+      if (!id) {
+        return { responseStatus: 400, response: { err: 'Invalid id field' } }
+      }
+      const isValid = await checkToken(req, id)
+      if (!isValid) {
+        return { responseStatus: 401, response: { err: 'Not authorized' } }
+      }
+      const cart = new ShoppingCart()
+      cart.userId = id
+      if (!items) {
+        return { responseStatus: 400, response: { err: 'Nothing to update' } }
+      }
+      /**
+       * Check structure of sent items array
+       */
+      for (let index = 0; index < items.length; index++) {
+        const item: IShoppingCartItem = items[index]
+        if (typeof item !== 'object') {
+          return { responseStatus: 400, response: { err: 'Invalid structure of items' } }
+        }
+        if (!item.id || !item.quantity) {
+          return { responseStatus: 400, response: { err: 'Missing price or quantiy' } }
+        }
+      }
+      cart.items = items
+      await cart.update()
+      return { responseStatus: 200 }
+    } catch (error) {
+      return { responseStatus: 500, response: { err: 'Can\'t find this cart' } }
+    }
   },
   [Methods.DELETE]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
     try {
