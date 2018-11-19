@@ -51,8 +51,6 @@ const handler: Endpoint = {
             return { responseStatus: 200, response: { order } }
 
         } catch (error) {
-            //@TODO: move to logger
-            console.log({ error })
             return { responseStatus: 500, response: { err: 'Error while creating order' } }
         }
     },

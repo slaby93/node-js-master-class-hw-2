@@ -90,8 +90,6 @@ class Server {
     }
 
     this.serverInstance.listen(port, () => {
-      // @TODO: move to Logger
-      console.log(`Server started at port ${port}`)
     })
   }
 

@@ -44,8 +44,6 @@ const handler: Endpoint = {
 
       return { responseStatus: 200, response: { cart } }
     } catch (error) {
-      //@TODO: move to logger
-      console.log({ error })
       return { responseStatus: 500, response: { err: 'Cart already exists' } }
     }
   },
