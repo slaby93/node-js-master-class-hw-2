@@ -10,6 +10,7 @@ class Order {
   id: string
   cart: ShoppingCart
   userId: string
+  receivedPayment: false
 
   save = async () => {
     const serializedCart = Order.serialize(this)
@@ -26,6 +27,7 @@ class Order {
     const deserializedOrder: Order = await Order.deserialize(data)
     this.cart = deserializedOrder.cart
     this.userId = deserializedOrder.userId
+    this.receivedPayment = deserializedOrder.receivedPayment
   }
 
   delete = async () => {
@@ -48,6 +50,7 @@ class Order {
     order.id = parsedData.id
     order.cart = new ShoppingCart()
     order.cart.userId = order.userId
+    order.receivedPayment = parsedData.receivedPayment
     await order.cart.load()
     return order
   }
