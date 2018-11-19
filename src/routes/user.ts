@@ -66,8 +66,8 @@ const handler: { [index: string]: RouteHandler } = {
             if (email) {
                 user.email = email
             }
-            await user.save()
-            return { responseStatus: 200 }
+            await user.update()
+            return { responseStatus: 200, response: { user } }
         } catch (error) {
             return { responseStatus: 500, response: { err: 'Error while updating user data' } }
         }
@@ -84,7 +84,7 @@ const handler: { [index: string]: RouteHandler } = {
             return { responseStatus: 200 }
 
         } catch (error) {
-            return { responseStatus: 500, response: { error } }
+            return { responseStatus: 500, response: { err: 'Error while deleting user' } }
         }
 
     },
