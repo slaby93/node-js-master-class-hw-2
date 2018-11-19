@@ -1,11 +1,11 @@
 import * as http from 'http'
-import { Endpoint, RouteOutput } from '../interfaces';
-import Methods from '../consts/methods';
-import { checkToken } from '../utils/routes';
-import ShoppingCart from '../models/shoppingCart';
-import Order from '../models/Order';
-import randomStringGenerator from '../utils/randomStringGenerator';
-import payment from '../utils/payment';
+import { Endpoint, RouteOutput } from '../interfaces'
+import Methods from '../consts/methods'
+import { checkToken } from '../utils/routes'
+import Order from '../models/Order'
+import payment from '../utils/payment'
+import mailgun from '../utils/mailgun'
+import User from '../models/user';
 
 const handler: Endpoint = {
   [Methods.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
@@ -22,6 +22,10 @@ const handler: Endpoint = {
       if (!isValid) {
         return { responseStatus: 401, response: { err: 'Not authorized' } }
       }
+      const user = new User()
+      user.id = id
+      await user.load()
+      await mailgun.sendEmail(user)
       const success = await payment.pay(orderId, token)
       const order = new Order()
       order.userId = id

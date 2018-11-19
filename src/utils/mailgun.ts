@@ -1,30 +1,33 @@
+//@TODO move to config
+const API_KEY = '1053eade-6a6332eb'
 import * as https from 'https'
-import { StringDecoder } from 'string_decoder';
 import * as querystring from 'querystring'
 import { IncomingMessage } from 'http';
-//@TODO: move to config
-const STRIPE_URL = 'api.stripe.com'
-const API_KEY = 'pk_test_tQS1VPmkGq6PRwnOpaRoXalc'
-const SECRET_KEY = 'sk_test_iksJybyTtHcJJ6wtmgBkRwzE'
+import { StringDecoder } from 'string_decoder';
+import User from '../models/user';
+
+const MAILGUN_URL = 'api.mailgun.net'
+const MAILGUN_AUTH = 'api:069433730221b3b149f276cceef93562-1053eade-6a6332eb'
+
 export default {
-  pay: (orderId: string, token: string): Promise<boolean> => {
+  sendEmail: (user: User): Promise<boolean> => {
     return new Promise((resolve, reject) => {
       try {
         const payload = querystring.stringify({
-          amount: 100,
-          currency: 'usd',
-          description: 'test payment',
-          source: token
+          from: 'Mailgun Sandbox <postmaster@sandboxd0e6fac8a63b4f97a34bfc1df0137843.mailgun.org>',
+          to: `${user.name} <${user.email}>`,
+          subject: 'Your order is accepted!',
+          text: `Congratulations ${user.name}, you just helped Nigerian prince! Thanks!`,
         })
-        const req = https.request({
-          host: STRIPE_URL,
-          path: '/v1/charges',
+        const request = https.request({
+          host: MAILGUN_URL,
+          path: '/v3/sandboxd0e6fac8a63b4f97a34bfc1df0137843.mailgun.org/messages',
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Content-Length': Buffer.byteLength(payload, 'utf8'),
-            'Authorization': `Bearer ${SECRET_KEY}`
-          }
+          },
+          auth: MAILGUN_AUTH
         }, (response: IncomingMessage) => {
           let buffer = ''
           const decoder = new StringDecoder('utf8')
@@ -34,17 +37,13 @@ export default {
           response.on('end', () => {
             buffer += decoder.end()
             const response = JSON.parse(buffer)
-            const { statusCode } = response
-            const success: boolean = response.captured && (statusCode === 200) && !response.error ? true : false
             //@TODO: move it to the logger
-            // console.log({ success, response })
-            resolve(success)
+            console.log('Mailgun', { response })
+            resolve()
           })
         })
-        req.write(payload);
-
-        req.end()
-
+        request.write(payload)
+        request.end()
       } catch (error) {
         //@TODO: move to logger
         console.log({ error })

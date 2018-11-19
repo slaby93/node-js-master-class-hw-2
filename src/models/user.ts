@@ -2,7 +2,6 @@ import db from './../utils/db'
 
 /**
  * User model.
- * Fields:
  *  name: string
  *  email: string
  *  address: string
@@ -31,6 +30,7 @@ class User {
     this.id = deserializedUser.id
     this.email = deserializedUser.email
     this.address = deserializedUser.address
+    this.name = deserializedUser.name
   }
 
   delete = async () => {
@@ -53,6 +53,7 @@ class User {
     user.id = parsedData.id
     user.email = parsedData.email
     user.address = parsedData.address
+    user.name = parsedData.name
     return user
   }
 
