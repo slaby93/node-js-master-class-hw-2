@@ -8,6 +8,11 @@ const MENU_FOLDER = '/'
 const MENU_FILE = 'menu.json'
 
 const handler: Endpoint = {
+  /**
+   * Returns fixed menu item for logged in user
+   * Accepts: id - user id
+   * Returns: fixed menu list
+   */
   [Methods.GET]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = queryParamsData

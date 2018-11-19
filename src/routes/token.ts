@@ -8,6 +8,11 @@ export const TOKEN_FOLDER = 'tokens'
 const ONE_HOUR = 1000 * 60 * 60
 
 const handler: Endpoint = {
+  /**
+   * Returns existing token for user
+   * Accepts: id - user id
+   * Returns: token
+   */
   [Methods.GET]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = queryParamsData
@@ -21,6 +26,11 @@ const handler: Endpoint = {
       return { responseStatus: 500 }
     }
   },
+  /**
+   * Create token for user
+   * Accepts: id - user id
+   * Returns: token - token which shold be put into header
+   */
   [Methods.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = bodyData
@@ -38,6 +48,11 @@ const handler: Endpoint = {
       return { responseStatus: 500, response: { err: 'Can\'t create new token.' } }
     }
   },
+  /**
+   * Update expiration time for token
+   * Accepts: id - user id
+   * Retruns: updated token
+   */
   [Methods.PUT]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = bodyData
@@ -48,11 +63,16 @@ const handler: Endpoint = {
       const parsedToken = JSON.parse(token)
       parsedToken.expirationDate += ONE_HOUR
       await db.update(TOKEN_FOLDER, id, JSON.stringify(parsedToken))
-      return { responseStatus: 200 }
+      return { responseStatus: 200, response: { token: parsedToken } }
     } catch (error) {
       return { responseStatus: 500, response: { err: 'Error while updating expiration date' } }
     }
   },
+  /**
+   * Removes token <-> logs out user
+   * Accepts: id - user id
+   * Returns: -none-
+   */
   [Methods.DELETE]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = bodyData

@@ -6,6 +6,11 @@ import randomStringGenerator from './../utils/randomStringGenerator'
 import { checkToken } from '../utils/routes';
 
 const handler: Endpoint = {
+    /** 
+     * Get you user info
+     * Accepts: id - user id
+     * Retruns: user - object with user details
+     */
     [Method.GET]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
         res.setHeader('Content-Type', 'application/json')
         try {
@@ -26,6 +31,13 @@ const handler: Endpoint = {
             return { responseStatus: 500, response: { err: 'Error while getting user' } }
         }
     },
+    /**
+     * Creates new user
+     * Accepts:
+     *      name - user name
+     *      email - valid user email
+     *      address - user address
+     */
     [Method.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
         res.setHeader('Content-Type', 'application/json')
         try {
@@ -46,6 +58,14 @@ const handler: Endpoint = {
             return { responseStatus: 500, response: { err: 'Error while creating user' } }
         }
     },
+    /**
+     * Edit user info
+     * Accepts: 
+     *      name - user name
+     *      email - valid user email
+     *      address - user address
+     * Returns: updates user
+     */
     [Method.PUT]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
         try {
             const {
@@ -79,6 +99,11 @@ const handler: Endpoint = {
             return { responseStatus: 500, response: { err: 'Error while updating user data' } }
         }
     },
+    /**
+     * Removes user
+     * Accepts: id - user id
+     * Returns: -none-
+     */
     [Method.DELETE]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
         try {
             const { id } = bodyData

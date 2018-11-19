@@ -8,6 +8,14 @@ import mailgun from '../utils/mailgun'
 import User from '../models/User';
 
 const handler: Endpoint = {
+  /**
+   * Make payment for order
+   * Accepts:
+   *    id - user id
+   *    orderId
+   *    token - this is value from stripe eg. tok_visa
+   * Returns: success - is everything went as should
+   */
   [Methods.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
     res.setHeader('Content-Type', 'application/json')
     try {

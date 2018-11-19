@@ -4,9 +4,12 @@ import MenuHandler from './menu'
 import CartHandler from './cart'
 import OrderHandler from './order'
 import PaymentHandler from './payment'
-import { RouteHandler } from './../interfaces'
+import { Endpoint } from './../interfaces'
 
-const routes: { [index: string]: { [method: string]: RouteHandler } } = {
+/**
+ * Declaration file with possible routes
+ */
+const routes: { [index: string]: Endpoint } = {
   '/user': UserHandler,
   '/token': TokenHandler,
   '/menu': MenuHandler,

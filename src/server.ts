@@ -5,8 +5,9 @@ import Method from './consts/methods'
 import * as querystring from 'querystring'
 import { StringDecoder } from 'string_decoder'
 /**
- * Server class
+ * Server wrapper
  * Create and maintain server instance
+ * Accept incomming REST requests
  */
 class Server {
   serverInstance: http.Server
@@ -25,7 +26,9 @@ class Server {
       const parsedBody: any = await this.parseBodyToJSON(req)
       // take path data from request
       const { pathname, query } = url.parse(req.url)
+      // parse method to match enum values
       const method: Method = req.method as Method
+      // convert querystring to JSON
       const parsedQuery = querystring.parse(query)
       // handle request
       const { responseStatus, response } = await router(pathname, query, parsedBody, parsedQuery, method, req, res)
@@ -34,11 +37,16 @@ class Server {
       // send response along with parsed data
       res.end(this.stringify(response))
     } catch {
+      // This branch should never happen
       res.statusCode = 500
-      res.end()
+      res.end(this.stringify({
+        err: 'Unknown error'
+      }))
     }
   }
-
+  /**
+   * Parse request data into JSON object
+   */
   parseBodyToJSON = async (req: http.IncomingMessage) => new Promise<string>((resolve) => {
     let body: string = ''
     const decoder = new StringDecoder('utf8')
@@ -48,7 +56,9 @@ class Server {
       resolve(this.parse(body))
     })
   })
-
+  /**
+   * Convert REST method to one of predefined Enum values
+   */
   convertMethod = (method: string): Method => {
     switch (method.toLowerCase()) {
       case 'get': return Method.GET; break;
@@ -58,6 +68,7 @@ class Server {
       default: return Method.GET
     }
   }
+ 
   /**
    * Parse value from JSON
    */

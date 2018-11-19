@@ -7,6 +7,11 @@ import ShoppingCart, { IShoppingCartItem } from "../models/ShoppingCart";
 
 
 const handler: Endpoint = {
+  /**
+   * Returns cart for user
+   * Accepts: id - user id
+   * Returns: user cart
+   */
   [Methods.GET]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = queryParamsData
@@ -25,6 +30,11 @@ const handler: Endpoint = {
       return { responseStatus: 500, response: { err: 'Can\'t get requested cart' } }
     }
   },
+  /**
+   * Creates new cart for user if there is no existing one
+   * Accepts: id - user id
+   * Returns: new cart for user
+   */
   [Methods.POST]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = bodyData
@@ -38,8 +48,8 @@ const handler: Endpoint = {
 
       const cart = new ShoppingCart()
       cart.userId = id
+      // generate cart unique id
       cart.id = randomStringGenerator(20)
-
       await cart.save()
 
       return { responseStatus: 200, response: { cart } }
@@ -47,6 +57,13 @@ const handler: Endpoint = {
       return { responseStatus: 500, response: { err: 'Cart already exists' } }
     }
   },
+  /**
+   * Update existing cart with new items
+   * Accepts: 
+   *    id - user id
+   *    items - list of items in cart eg. { "id": "1", "quantity": "2" }
+   * Returns: updated cart 
+   */
   [Methods.PUT]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
     try {
       const { id, items } = bodyData
@@ -77,11 +94,16 @@ const handler: Endpoint = {
       }
       cart.items = items
       await cart.update()
-      return { responseStatus: 200 }
+      return { responseStatus: 200, response: { cart } }
     } catch (error) {
       return { responseStatus: 500, response: { err: 'Can\'t find this cart' } }
     }
   },
+  /**
+   * Removes existing cart from user
+   * Accepts: id - user id
+   * Retruns: -none-
+   */
   [Methods.DELETE]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
     try {
       const { id } = queryParamsData
