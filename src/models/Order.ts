@@ -10,7 +10,7 @@ class Order {
   id: string
   cart: ShoppingCart
   userId: string
-  receivedPayment: false
+  receivedPayment: boolean = false
 
   save = async () => {
     const serializedCart = Order.serialize(this)
@@ -35,11 +35,12 @@ class Order {
   }
 
   private static serialize = (order: Order): string => {
-    const { id, userId, cart } = order
+    const { id, userId, cart, receivedPayment } = order
     return JSON.stringify({
       id,
       userId,
-      cart: cart.id
+      cart: cart.id,
+      receivedPayment
     })
   }
 
