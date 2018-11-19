@@ -61,6 +61,7 @@ const handler: Endpoint = {
       }
       const cart = new ShoppingCart()
       cart.userId = id
+      await cart.load()
       if (!items) {
         return { responseStatus: 400, response: { err: 'Nothing to update' } }
       }

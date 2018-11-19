@@ -39,7 +39,7 @@ class ShoppingCart {
     await db.delete(ShoppingCart.FOLDER, this.userId)
   }
 
-  private static serialize = (cart: ShoppingCart): string => {
+  static serialize = (cart: ShoppingCart): string => {
     const { userId, id, items } = cart
     return JSON.stringify({
       userId,
@@ -48,7 +48,7 @@ class ShoppingCart {
     })
   }
 
-  private static deserialize = (input: string): ShoppingCart => {
+  static deserialize = (input: string): ShoppingCart => {
     const parsedData: ShoppingCart = JSON.parse(input)
     const cart = new ShoppingCart()
     cart.id = parsedData.id
