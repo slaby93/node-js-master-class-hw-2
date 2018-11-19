@@ -2,7 +2,7 @@ import * as http from 'http'
 import { Endpoint, RouteOutput } from '../interfaces';
 import Methods from '../consts/methods';
 import { checkToken } from '../utils/routes';
-import ShoppingCart from '../models/shoppingCart';
+import ShoppingCart from '../models/ShoppingCart';
 import Order from '../models/Order';
 import randomStringGenerator from '../utils/randomStringGenerator';
 

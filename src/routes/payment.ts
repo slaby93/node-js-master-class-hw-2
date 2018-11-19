@@ -5,7 +5,7 @@ import { checkToken } from '../utils/routes'
 import Order from '../models/Order'
 import payment from '../utils/payment'
 import mailgun from '../utils/mailgun'
-import User from '../models/user';
+import User from '../models/User';
 
 const handler: Endpoint = {
   [Methods.POST]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {

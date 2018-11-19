@@ -3,7 +3,7 @@ import { Endpoint, RouteOutput } from "../interfaces";
 import Methods from "../consts/methods";
 import { checkToken } from "../utils/routes";
 import randomStringGenerator from "../utils/randomStringGenerator";
-import ShoppingCart, { IShoppingCartItem } from "../models/shoppingCart";
+import ShoppingCart, { IShoppingCartItem } from "../models/ShoppingCart";
 
 
 const handler: Endpoint = {

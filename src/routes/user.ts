@@ -1,7 +1,7 @@
 import * as http from 'http'
 import { RouteOutput, Endpoint } from './../interfaces'
 import Method from './../consts/methods'
-import User from './../models/user'
+import User from './../models/User'
 import randomStringGenerator from './../utils/randomStringGenerator'
 import { checkToken } from '../utils/routes';
 

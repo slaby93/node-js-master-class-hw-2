@@ -2,9 +2,9 @@
 const API_KEY = '1053eade-6a6332eb'
 import * as https from 'https'
 import * as querystring from 'querystring'
-import { IncomingMessage } from 'http';
-import { StringDecoder } from 'string_decoder';
-import User from '../models/user';
+import { IncomingMessage } from 'http'
+import { StringDecoder } from 'string_decoder'
+import User from '../models/User'
 
 const MAILGUN_URL = 'api.mailgun.net'
 const MAILGUN_AUTH = 'api:069433730221b3b149f276cceef93562-1053eade-6a6332eb'
