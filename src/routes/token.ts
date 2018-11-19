@@ -4,7 +4,7 @@ import Methods from '../consts/methods';
 import randomStringGenerator from '../utils/randomStringGenerator';
 import db from '../utils/db';
 
-const TOKEN_FOLDER = 'tokens'
+export const TOKEN_FOLDER = 'tokens'
 const ONE_HOUR = 1000 * 60 * 60
 
 const handler: Endpoint = {

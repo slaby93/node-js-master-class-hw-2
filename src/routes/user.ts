@@ -1,8 +1,9 @@
 import * as http from 'http'
-import { RouteHandler, RouteOutput, Endpoint } from './../interfaces'
+import { RouteOutput, Endpoint } from './../interfaces'
 import Method from './../consts/methods'
 import User from './../models/user'
 import randomStringGenerator from './../utils/randomStringGenerator'
+import { checkToken } from '../utils/routes';
 
 const handler: Endpoint = {
     [Method.GET]: async (bodyData: any, queryParamsData: any, req: http.IncomingMessage, res: http.ServerResponse): Promise<RouteOutput> => {
@@ -12,7 +13,10 @@ const handler: Endpoint = {
             if (!id) {
                 return { responseStatus: 400, response: { err: 'Id is not provided' } }
             }
-
+            const isValid = await checkToken(req, id)
+            if (!isValid) {
+                return { responseStatus: 401, response: { err: 'Not authorized' } }
+            }
             const user = new User()
             user.id = id
             await user.load()
@@ -53,6 +57,10 @@ const handler: Endpoint = {
             if (!id) {
                 return { responseStatus: 400, response: { err: 'Invalid id field' } }
             }
+            const isValid = await checkToken(req, id)
+            if (!isValid) {
+                return { responseStatus: 401, response: { err: 'Not authorized' } }
+            }
             const user = new User()
             user.id = id
             await user.load()
@@ -76,6 +84,10 @@ const handler: Endpoint = {
             const { id } = bodyData
             if (!id) {
                 return { responseStatus: 400, response: { err: 'Invalid id field' } }
+            }
+            const isValid = await checkToken(req, id)
+            if (!isValid) {
+                return { responseStatus: 401, response: { err: 'Not authorized' } }
             }
             const user = new User()
             user.id = id
