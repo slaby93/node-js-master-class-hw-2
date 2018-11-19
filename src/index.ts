@@ -12,9 +12,6 @@ const app = {
 app.initialize('test')
 
 /**
-3. When a user is logged in, they should be able to GET all the possible menu items 
-(these items can be hardcoded into the system). 
-
 4. A logged-in user should be able to fill a shopping cart with menu items
 
 5. A logged-in user should be able to create an order. You should integrate with the 

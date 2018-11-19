@@ -50,6 +50,7 @@ export default {
     } catch (error) {
       //@TODO: move to logger
       console.error({ error })
+      throw error
     }
   },
 }
