@@ -106,7 +106,7 @@ const handler: Endpoint = {
    */
   [Methods.DELETE]: async (bodyData: any, queryParamsData: any, req: IncomingMessage, res: ServerResponse): Promise<RouteOutput> => {
     try {
-      const { id } = queryParamsData
+      const { id } = bodyData
       if (!id) {
         return { responseStatus: 400, response: { err: 'Invalid id field' } }
       }
